@@ -105,7 +105,7 @@ uploadBtn.addEventListener('click', async () => {
         if (data.success) {
             allSongs = data.playlist || [];
             currentPage = 1;
-            displayResults(data.emotion, data.scene);
+            displayResults(data.emotion, data.scene, data.objects);
         } else {
             throw new Error('Failed to get recommendations');
         }
@@ -118,15 +118,24 @@ uploadBtn.addEventListener('click', async () => {
 });
 
 // Display results
-function displayResults(emotion, scene) {
+function displayResults(emotion, scene, objects) {
     // Show analysis info
     let emotionText = emotion ? emotion.charAt(0).toUpperCase() + emotion.slice(1) : 'None detected';
     let sceneText = scene ? scene.charAt(0).toUpperCase() + scene.slice(1) : 'Unknown';
-    
+    let objectText = 'None detected';
+    if (objects && Array.isArray(objects) && objects.length > 0) {
+        objectText = objects.map(obj => 
+            obj.charAt(0).toUpperCase() + obj.slice(1)
+        ).join(', ');
+    } else if (objects && typeof objects === 'string') {
+        objectText = objects; 
+    }
     analysisInfo.innerHTML = `
         <h3>🎭 Image Analysis</h3>
         <p><strong>Face Emotion:</strong> ${emotionText}</p>
         <p><strong>Scene Detected:</strong> ${sceneText}</p>
+        <p><strong>Objects Detected:</strong> ${objectText}</p>
+        
     `;
 
     // Display songs for current page

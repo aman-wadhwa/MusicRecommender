@@ -68,9 +68,9 @@ def recommend():
             
             emotion = results['face_emotion']
             scene = results['detected_scene']
-            
+            objects = results['detected_object']
             # Get music recommendations
-            playlist = dj.get_recommendation(scene=scene, emotion=emotion)
+            playlist = dj.get_recommendation(scene=scene, emotion=emotion, objects=objects)
             
             # Clean up uploaded file
             try:
@@ -82,6 +82,7 @@ def recommend():
                 'success': True,
                 'emotion': emotion,
                 'scene': scene,
+                'objects' : objects,
                 'playlist': playlist
             })
             
@@ -101,7 +102,7 @@ if __name__ == '__main__':
     print("Initializing models (this may take a moment)...")
     init_models()
     print("Models loaded! Server starting...")
-    port = int(os.environ.get('PORT', 5000))
-    app.run(host='0.0.0.0', port=port, debug=False)
-    # app.run(debug=True, port=5000)
+    # port = int(os.environ.get('PORT', 5000))
+    # app.run(host='0.0.0.0', port=port, debug=False)
+    app.run(debug=True, port=5000)
 

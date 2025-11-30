@@ -5,6 +5,7 @@ from keras.models import load_model
 from keras.preprocessing import image as keras_image
 from deepface import DeepFace
 from collections import Counter
+from ultralytics import YOLO
 
 class ImageAnalyzer:
     def __init__(self):
@@ -15,12 +16,14 @@ class ImageAnalyzer:
         self.classes = ['buildings', 'forest', 'glacier', 'mountain', 'sea', 'street']
         
         if os.path.exists(self.model_path):
-            print(f"Loading Custom Vibe Model: {self.model_path}...")
+            # print(f"Loading Custom Vibe Model: {self.model_path}...")
             self.scene_model = load_model(self.model_path)
             print("Scene Model Loaded!")
         else:
             print(f"ERROR: {self.model_path} not found.")
             self.scene_model = None
+        self.yolo = YOLO('yolov8n.pt') 
+        print("YOLOv8 Loaded.")
 
     def analyze_face_emotion(self, img_path):
         """
@@ -81,6 +84,30 @@ class ImageAnalyzer:
         except Exception as e:
             print(f"Scene Error: {e}")
             return "unknown"
+        
+    def analyze_specific_items(self, img_path):
+        """ Uses YOLO to find items like 'guitar', 'dog', 'book'.
+        Returns a list of strings: ['person', 'tie', 'laptop']
+        """
+        try:
+            # Run YOLO
+            results = self.yolo(img_path, verbose=False)
+            
+            # Extract class names
+            detected_items = []
+            for result in results:
+                for box in result.boxes:
+                    class_id = int(box.cls[0])
+                    item_name = self.yolo.names[class_id]
+                    detected_items.append(item_name)
+            
+            # Remove 'person' (DeepFace handles humans) and duplicates
+            unique_items = list(set([item for item in detected_items if item != 'person']))
+            return unique_items
+            
+        except Exception as e:
+            print(f"YOLO Error: {e}")
+            return []
 
     def get_image_data(self, img_path):
         """
@@ -93,10 +120,13 @@ class ImageAnalyzer:
         
         # 2. Get Scene
         scene = self.analyze_scene_objects(img_path)
+        # 3. get object
+        object = self.analyze_specific_items(img_path)
 
         return {
             "face_emotion": emotion,
-            "detected_scene": scene
+            "detected_scene": scene,
+            "detected_object" : object
         }
 
 if __name__ == "__main__":

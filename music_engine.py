@@ -50,29 +50,53 @@ class MusicRecommender:
             'neutral':   {'valence': 0.0,  'energy': 0.0},   # No change
             'disgust':   {'valence': -0.3, 'energy': +0.1}
         }
+        self.object_modifiers = {
+            # WORK / STUDY OBJECTS -> Low Energy, Low Danceability
+            'laptop':  {'v': 0.0, 'e': -0.3},
+            'book':    {'v': 0.0, 'e': -0.4},
+            
+            # PETS -> High Valence (Happy)
+            'cat':     {'v': +0.4, 'e': -0.1},
+            'dog':     {'v': +0.4, 'e': +0.1},
+            
+            # VEHICLES -> High Energy
+            'car':     {'v': 0.0, 'e': +0.3},
+            'motorcycle': {'v': 0.0, 'e': +0.5},
+            
+            # INSTRUMENTS -> Acoustic
+            'guitar':  {'v': 0.0, 'e': -0.2}, # implies acoustic
+        }
 
-    def get_recommendation(self, scene="unknown", emotion="neutral"):
+    def get_recommendation(self, scene="unknown", emotion="neutral", objects=[]):
         if not self.data_ready:
             return []
 
         # STEP A: Start with the Scene (Context)
         # Default to "Neutral" vector if scene is unknown
-        base_vector = np.array(self.scene_vectors.get(scene, [0.5, 0.5, 0.5, 0.5]))
+        target = np.array(self.scene_vectors.get(scene, [0.5, 0.5, 0.5, 0.5]))
         
         # STEP B: Apply Emotion (The Modifier)
         modifier = self.emotion_modifiers.get(emotion, {'valence': 0, 'energy': 0})
         
         # Modify Valence (Index 0)
-        base_vector[0] = np.clip(base_vector[0] + modifier['valence'], 0, 1)
+        target[0] += modifier['valence']
         
         # Modify Energy (Index 1)
-        base_vector[1] = np.clip(base_vector[1] + modifier['energy'], 0, 1)
+        target[1] += modifier['energy']
 
         print(f"Logic: Scene '{scene}' set base. Emotion '{emotion}' shifted values.")
-        print(f" Final Target Vector: {base_vector}")
-
+        # print(f" Final Target Vector: {base_vector}")
+        print(f"   Detected Objects: {objects}")
+        for obj in objects:
+            if obj in self.object_modifiers:
+                o_mod = self.object_modifiers[obj]
+                target[0] += o_mod['v']
+                target[1] += o_mod['e']
+                print(f"   -> '{obj}' modified the vibe! (Valence {o_mod['v']}, Energy {o_mod['e']})")
+        target = np.clip(target, 0, 1)
+        print(f" Final Target Vector: {target}")
         # STEP C: Find Songs
-        distances, indices = self.nn_model.kneighbors([base_vector])
+        distances, indices = self.nn_model.kneighbors([target])
         
         playlist = []
         for idx in indices[0][:20]: # Top 20
