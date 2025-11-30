@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image to Song Recommender</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎵 Image to Song Recommender</h1>
+            <p>Upload an image and discover music that matches your mood!</p>
+        </header>
+
+        <div class="upload-section" id="uploadSection">
+            <div class="upload-box" id="uploadBox">
+                <input type="file" id="imageInput" accept="image/*" hidden>
+                <div class="upload-area" id="uploadArea">
+                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="17 8 12 3 7 8"></polyline>
+                        <line x1="12" y1="3" x2="12" y2="15"></line>
+                    </svg>
+                    <p>Click to upload or drag and drop</p>
+                    <p class="subtext">PNG, JPG, JPEG, GIF, WEBP</p>
+                </div>
+                <button id="uploadBtn" class="btn-primary" disabled>Get Recommendations</button>
+            </div>
+            <div class="preview-container" id="previewContainer" style="display: none;">
+                <img id="previewImage" alt="Preview">
+                <button id="changeImageBtn" class="btn-secondary">Change Image</button>
+            </div>
+        </div>
+
+        <div class="loading" id="loading" style="display: none;">
+            <div class="spinner"></div>
+            <p>Analyzing your image and finding the perfect songs...</p>
+        </div>
+
+        <div class="results-section" id="resultsSection" style="display: none;">
+            <div class="analysis-info" id="analysisInfo"></div>
+            
+            <div class="pagination-controls">
+                <button id="prevBtn" class="btn-nav" disabled>← Previous</button>
+                <span id="pageInfo">Page 1 of 2</span>
+                <button id="nextBtn" class="btn-nav">Next →</button>
+            </div>
+
+            <div class="songs-container" id="songsContainer"></div>
+
+            <div class="pagination-controls">
+                <button id="prevBtnBottom" class="btn-nav" disabled>← Previous</button>
+                <span id="pageInfoBottom">Page 1 of 2</span>
+                <button id="nextBtnBottom" class="btn-nav">Next →</button>
+            </div>
+
+            <button id="newSearchBtn" class="btn-primary">Upload New Image</button>
+        </div>
+
+        <div class="error" id="error" style="display: none;"></div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
