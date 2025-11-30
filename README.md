@@ -6,9 +6,7 @@ A beautiful web interface for the Image to Song Recommender project. Upload an i
 
 - 🖼️ **Image Upload**: Drag and drop or click to upload images
 - 🎭 **AI Analysis**: Detects face emotions and scene context
-- 🎵 **Music Recommendations**: Get top 20 song recommendations
-- 📄 **Pagination**: View results in two pages (10 songs per page)
-- 🎨 **Modern UI**: Beautiful, responsive design
+- 🎵 **Music Recommendations**: Get top 20 song recommendatio
 - 🔗 **Spotify Links**: Direct links to play songs on Spotify
 
 ## Setup
