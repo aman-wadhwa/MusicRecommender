@@ -1,13 +1,13 @@
-# Image to Song Recommender - Frontend
+# Image to Song Recommender
 
 A beautiful web interface for the Image to Song Recommender project. Upload an image and get personalized song recommendations based on the detected emotion and scene!
 
 ## Features
 
-- 🖼️ **Image Upload**: Drag and drop or click to upload images
-- 🎭 **AI Analysis**: Detects face emotions and scene context
-- 🎵 **Music Recommendations**: Get top 20 song recommendatio
-- 🔗 **Spotify Links**: Direct links to play songs on Spotify
+- **Image Upload**: Drag and drop or click to upload images
+- **AI Analysis**: Detects face emotions and scene context and detects objects
+- **Music Recommendations**: Get top 20 song recommendatio
+- **Spotify Links**: Direct links to play songs on Spotify
 
 ## Setup
 
@@ -52,5 +52,5 @@ SongRecommender/
 
 - **POST** `/api/recommend`: Upload an image and get song recommendations
   - Request: Form data with `image` field
-  - Response: JSON with `emotion`, `scene`, and `playlist` (array of 20 songs)
+  - Response: JSON with `emotion`, `scene`, `objects` and `playlist` (array of 20 songs)
 
